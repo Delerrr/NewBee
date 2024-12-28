@@ -10,6 +10,8 @@ public class GizmosHelper : MonoBehaviour
     public float eventNodeRadius;
     public Color eventNodeTimeTextColor;
     public float eventNodeTimeTextSize;
+    [Header("Refresh")]
+    public bool refresh = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,8 +24,18 @@ public class GizmosHelper : MonoBehaviour
     }
 
     private void OnDrawGizmos() {
+        if (refresh) {
+            Refresh();
+            refresh = false;
+        }
         DrawEventNodes();
     }
+
+    private void Refresh() {
+        Sys sys = transform.GetComponent<Sys>();
+        sys.Init();
+    }
+
     private void DrawEventNodes() {
         Sys sys = transform.GetComponent<Sys>();
         List<EventNode> eventNodes = sys.GetEventNodes();
