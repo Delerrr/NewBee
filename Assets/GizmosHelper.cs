@@ -28,4 +28,7 @@ public class GizmosHelper : MonoBehaviour
         }
     }
 
+    private void DrawTrace() {
+        // TODO: πÏº£œ‘ æ
+    }
 }
