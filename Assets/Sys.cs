@@ -3,12 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Sys : MonoBehaviour {
+    public static Sys instance => _instance;
+    private static Sys _instance;
     public enum MoveType { Jump, Straight };
 
     public Transform player;
     private Sequence sq;
     private List<EventNode> eventNodes = new();
     private List<VelocityNode> velocityNodes = new();
+
+    private void Awake() {
+        if (_instance != null) {
+            Debug.LogError("单例模式不能出现多个实例");
+            return;
+        }
+        _instance = this;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
         Init();
@@ -31,12 +41,13 @@ public class Sys : MonoBehaviour {
         sq.Restart();
     }
 
-    private void Init() {
+    public void Init() {
         sq = DOTween.Sequence();
         sq.SetAutoKill(false);
         sq.Pause();
 
         InitEventNodes();
+        ResetPlayer();
 
         for (int i = 0; i < eventNodes.Count - 1; i++) {
             EventNode eventNode = eventNodes[i];
@@ -45,10 +56,10 @@ public class Sys : MonoBehaviour {
             sq.Append(tween);
         }
 
-        ResetPlayer();
     }
 
     private void InitEventNodes() {
+        eventNodes.Clear();
         foreach (Transform child in transform) {
             EventNode eventNode = child.GetComponent<EventNode>();
             if (eventNode != null) {
@@ -74,7 +85,7 @@ public class Sys : MonoBehaviour {
             if (eventNode.transform.GetComponent<VelocityNode>() != null) {
                 velocity = eventNode.transform.GetComponent<VelocityNode>().velocity;
             }
-            res += (eventNodes[i + 1].transform.position.x - eventNodes[i].transform.position.x) / velocity;
+            res += Vector3.Distance(eventNodes[i + 1].transform.position, eventNodes[i].transform.position) / velocity;
         }
         return res;
     }
