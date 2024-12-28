@@ -9,7 +9,6 @@ public class Sys : MonoBehaviour {
 
     public Transform player;
     private Sequence sq;
-    private List<EventNode> eventNodes = new();
     private List<VelocityNode> velocityNodes = new();
 
     private void Awake() {
@@ -25,41 +24,7 @@ public class Sys : MonoBehaviour {
     }
 
     public List<EventNode> GetEventNodes() {
-        if (eventNodes.Count == 0) {
-            InitEventNodes();
-        }
-        return eventNodes;
-    }
-
-    private void ResetPlayer() {
-        if (eventNodes.Count > 0) {
-            player.transform.position = eventNodes[0].transform.position;
-        }
-    }
-    private void Play() {
-        ResetPlayer();
-        sq.Restart();
-    }
-
-    public void Init() {
-        sq = DOTween.Sequence();
-        sq.SetAutoKill(false);
-        sq.Pause();
-
-        InitEventNodes();
-        ResetPlayer();
-
-        for (int i = 0; i < eventNodes.Count - 1; i++) {
-            EventNode eventNode = eventNodes[i];
-            Tween tween = GetTween(player, eventNode.moveType, GetTime(i + 1) - GetTime(i), eventNodes[i + 1].transform.position, eventNode.jumpPower);
-            eventNode.SetTween(tween);
-            sq.Append(tween);
-        }
-
-    }
-
-    private void InitEventNodes() {
-        eventNodes.Clear();
+        List<EventNode> eventNodes = new();
         foreach (Transform child in transform) {
             EventNode eventNode = child.GetComponent<EventNode>();
             if (eventNode != null) {
@@ -71,9 +36,38 @@ public class Sys : MonoBehaviour {
                 velocityNodes.Add(velocityNode);
             }
         }
+        return eventNodes;
+    }
+
+    private void ResetPlayer(List<EventNode> eventNodes) {
+        if (eventNodes.Count > 0) {
+            player.transform.position = eventNodes[0].transform.position;
+        }
+    }
+    private void Play() {
+        ResetPlayer(GetEventNodes());
+        sq.Restart();
+    }
+
+    public void Init() {
+        sq = DOTween.Sequence();
+        sq.SetAutoKill(false);
+        sq.Pause();
+
+        List<EventNode> eventNodes = GetEventNodes();
+        ResetPlayer(eventNodes);
+
+        for (int i = 0; i < eventNodes.Count - 1; i++) {
+            EventNode eventNode = eventNodes[i];
+            Tween tween = GetTween(player, eventNode.moveType, GetTime(i + 1) - GetTime(i), eventNodes[i + 1].transform.position, eventNode.jumpPower);
+            eventNode.SetTween(tween);
+            sq.Append(tween);
+        }
+
     }
 
     public float GetTime(int idx) {
+        List<EventNode> eventNodes = GetEventNodes(); 
         if (idx >= eventNodes.Count) {
             Debug.LogError("idx ²»ºÏ·¨");
             return -1;
