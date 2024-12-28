@@ -9,7 +9,8 @@ public class GizmosHelper : MonoBehaviour
     public Color eventNodeColor;
     public float eventNodeRadius;
     public Color eventNodeTimeTextColor;
-    public float eventNodeTimeTextSize;
+    public Color eventNodeVelocityTextColor;
+    //public float eventNodeTimeTextSize;
     [Header("Refresh")]
     public bool refresh = false;
 
@@ -43,8 +44,15 @@ public class GizmosHelper : MonoBehaviour
             Gizmos.color = eventNodeColor;
             Gizmos.DrawSphere(eventNodes[i].transform.position, eventNodeRadius);
             // time
-            Handles.color = eventNodeTimeTextColor;
-            Handles.Label(eventNodes[i].transform.position + Vector3.up - Vector3.right * eventNodeRadius, sys.GetTime(i).ToString("0.000"));
+            GUIStyle style = new();
+            style.normal.textColor = eventNodeTimeTextColor;
+            Handles.Label(eventNodes[i].transform.position + Vector3.up * (1f + eventNodeRadius) - Vector3.right * eventNodeRadius, 
+                "t: " + sys.GetTime(i).ToString("0.000"), style);
+            if (eventNodes[i].transform.GetComponent<VelocityNode>() != null) {
+                style.normal.textColor = eventNodeVelocityTextColor;
+                Handles.Label(eventNodes[i].transform.position + Vector3.down * (1f + eventNodeRadius) - Vector3.right * eventNodeRadius,
+                    "v: " + eventNodes[i].transform.GetComponent<VelocityNode>().velocity, style);
+            }
         }
     }
 
