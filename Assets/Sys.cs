@@ -73,7 +73,7 @@ public class Sys : MonoBehaviour {
         }
     }
 
-    private float GetTime(int idx) {
+    public float GetTime(int idx) {
         if (idx >= eventNodes.Count) {
             Debug.LogError("idx ²»ºÏ·¨");
             return -1;
