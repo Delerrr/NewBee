@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class Sys : MonoBehaviour {
     public static Sys instance => _instance;
     private static Sys _instance;
@@ -23,6 +24,14 @@ public class Sys : MonoBehaviour {
         Init();
     }
 
+    public int GetIdx(EventNode target, List<EventNode> eventNodes) {
+        for (int i = 0; i < eventNodes.Count; i++) {
+            if (eventNodes[i] == target) {
+                return i;
+            }
+        }
+        return -1;
+    }
     public List<EventNode> GetEventNodes() {
         List<EventNode> eventNodes = new();
         foreach (Transform child in transform) {
@@ -59,13 +68,15 @@ public class Sys : MonoBehaviour {
 
         for (int i = 0; i < eventNodes.Count - 1; i++) {
             EventNode eventNode = eventNodes[i];
-            Tween tween = GetTween(player, eventNode.moveType, GetTime(i + 1) - GetTime(i), eventNodes[i + 1].transform.position, eventNode.jumpPower);
-            eventNode.SetTween(tween);
+            Tween tween = GetTween(player, eventNode.moveType, GetDuration(i), eventNodes[i + 1].transform.position, eventNode.jumpPower);
             sq.Append(tween);
         }
 
     }
 
+    public float GetDuration(int idx) {
+        return GetTime(idx + 1) - GetTime(idx);
+    }
     public float GetTime(int idx) {
         List<EventNode> eventNodes = GetEventNodes(); 
         if (idx >= eventNodes.Count) {
