@@ -15,8 +15,10 @@ public class GizmosHelper : MonoBehaviour
     [Header("Trace")]
     public GameObject emptyGameObject;
     public Color traceColor;
-    public int segments = 30;
+    public float tweenDuration = 0.5f;
 
+    public delegate void UpdatePathPointsLoop();
+    public UpdatePathPointsLoop updatePathPointsLoop;
     public List<EventNode> GetEventNodes() {
         return GetSys().GetEventNodes();
     }
@@ -33,6 +35,14 @@ public class GizmosHelper : MonoBehaviour
         _instance = this;
     }
     void Start() {
+    }
+
+    public void StartUpdatePathPointsLoopMethod() {
+        InvokeRepeating(nameof(UpdatePathPointsLoopMethod), 0, 1f);
+    }
+
+    private void UpdatePathPointsLoopMethod() {
+        updatePathPointsLoop?.Invoke();
     }
 
     // Update is called once per frame

@@ -5,15 +5,28 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(GizmosHelper))]
-public class GizmosHelperEditor : Editor
-{
+public class GizmosHelperEditor : Editor {
     GizmosHelper gizmosHelper;
     Sys sys;
+    private bool loopEnabled = false;
 
     private void OnEnable() {
         gizmosHelper = target as GizmosHelper;
         sys = gizmosHelper.GetSys();
-        UpdateEventNodePathPoints();
+        List<EventNode> eventNodes = gizmosHelper.GetEventNodes();
+        if (!loopEnabled) {
+            gizmosHelper.updatePathPointsLoop += () => {
+                foreach (EventNode eventNode in eventNodes) {
+                    Tween tween = eventNode.UpdatePathPoints(sys, gizmosHelper);
+                    if (tween != null) {
+                        DOTweenEditorPreview.PrepareTweenForPreview(tween, false, false);
+                        DOTweenEditorPreview.Start();
+                    }
+                }
+            };
+            gizmosHelper.StartUpdatePathPointsLoopMethod();
+            loopEnabled = true;
+        }
     }
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
@@ -23,13 +36,5 @@ public class GizmosHelperEditor : Editor
     }
 
     private void UpdateEventNodePathPoints() {
-        List<EventNode> eventNodes = gizmosHelper.GetEventNodes();
-        foreach (EventNode eventNode in eventNodes) {
-            Tween tween = eventNode.UpdatePathPoints(sys);
-            if (tween != null) {
-                DOTweenEditorPreview.PrepareTweenForPreview(tween, false, false);
-                DOTweenEditorPreview.Start();
-            }
-        }
     }
 }

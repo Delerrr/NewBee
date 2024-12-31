@@ -22,18 +22,13 @@ public class EventNode : MonoBehaviour
     }
 
     public List<Vector3> GetPathPoints() {
-        if (isUpdatingPathPoints) {
-            return null;
-        }
-        if (Application.isPlaying) {
-            if (pathPoints.Count == 0) {
-                UpdatePathPoints(Sys.instance);
-            }
+        if (Application.isPlaying && pathPoints.Count == 0) {
+            UpdatePathPoints(Sys.instance, GizmosHelper.instance);
         }
         return pathPoints;
     }
 
-    public Tween UpdatePathPoints(Sys sys) {
+    public Tween UpdatePathPoints(Sys sys, GizmosHelper gizmosHelper) {
         if (isUpdatingPathPoints) {
             return null;
         }
@@ -47,12 +42,15 @@ public class EventNode : MonoBehaviour
         isUpdatingPathPoints = true;
 
         Tween ret = null;
-        pathPoints.Clear();
+        List<Vector3> newPathPoints = new();
         if (moveType == Sys.MoveType.Jump) {
             emptyGameObject.position = transform.position;
-            ret = emptyGameObject.DOJump(eventNodes[idx + 1].transform.position, jumpPower, 1, 1f);
-            ret.onUpdate += () => pathPoints.Add(emptyGameObject.transform.position);
-            ret.onComplete += () => isUpdatingPathPoints = false;
+            ret = emptyGameObject.DOJump(eventNodes[idx + 1].transform.position, jumpPower, 1, gizmosHelper.tweenDuration);
+            ret.onUpdate += () => newPathPoints.Add(emptyGameObject.transform.position);
+            ret.onComplete += () => {
+                isUpdatingPathPoints = false;
+                pathPoints = newPathPoints;
+            };
         }
         return ret;
     }
