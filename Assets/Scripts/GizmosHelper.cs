@@ -15,7 +15,7 @@ public class GizmosHelper : MonoBehaviour
     [Header("Trace")]
     public GameObject emptyGameObject;
     public Color traceColor;
-    public float tweenDuration = 0.5f;
+    public int tracePointsCountPerEventNode = 30;
 
     public delegate void UpdatePathPointsLoop();
     public UpdatePathPointsLoop updatePathPointsLoop;
@@ -67,7 +67,7 @@ public class GizmosHelper : MonoBehaviour
             DrawEventNodeVelocity(eventNodes[i]);
             if (i < eventNodes.Count - 1) {
                 Vector3 to = eventNodes[i + 1].transform.position;
-                DrawNodeTrace(to, eventNodes[i]);
+                DrawNodeTrace(to, eventNodes[i], eventNodes);
             }
         }
     }
@@ -82,20 +82,20 @@ public class GizmosHelper : MonoBehaviour
         GUIStyle style = new();
         style.normal.textColor = eventNodeTimeTextColor;
         Handles.Label(eventNode.transform.position + Vector3.up * (1f + eventNodeRadius) - Vector3.right * eventNodeRadius,
-            "t: " + eventNode.time, style);
+            "t: " + eventNode.startTime, style);
     }
 
     private void DrawNodePosition(EventNode eventNode) {
         Gizmos.color = eventNodeColor;
         Gizmos.DrawSphere(eventNode.transform.position, eventNodeRadius);
     }
-    private void DrawNodeTrace(Vector3 to, EventNode eventNode) {
+    private void DrawNodeTrace(Vector3 to, EventNode eventNode, List<EventNode> eventNodes) {
         Sys.MoveType moveType = eventNode.moveType;
         Vector3 from = eventNode.transform.position;
         Gizmos.color = traceColor;
         switch (moveType) {
             case Sys.MoveType.Jump:
-                DrawJumpTrace(eventNode);
+                DrawJumpTrace(eventNode, eventNodes);
                 break;
             case Sys.MoveType.Straight:
                 DrawStraightTrace(from, to);
@@ -107,8 +107,8 @@ public class GizmosHelper : MonoBehaviour
         Gizmos.DrawLine(from, to);
     }
 
-    private void DrawJumpTrace(EventNode eventNode) {
-        List<Vector3> pathPoints = eventNode.GetPathPoints();
+    private void DrawJumpTrace(EventNode eventNode, List<EventNode> eventNodes) {
+        List<Vector3> pathPoints = eventNode.GetPathPoints(tracePointsCountPerEventNode, eventNodes);
         if (pathPoints == null || pathPoints.Count < 2) {
             return;
         }

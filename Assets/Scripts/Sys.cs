@@ -1,4 +1,3 @@
-using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,9 +6,13 @@ public class Sys : MonoBehaviour {
     public static Sys instance => _instance;
     private static Sys _instance;
     public enum MoveType { Jump, Straight };
-
+    public delegate void Play(Vector3 position);
+    public Play playEvent;
     public Transform player;
-    private Sequence sq;
+    [Header("Jump")]
+    public float gravity = -9.8f;
+    private NodeTimeParser nodeTimeParser;
+    private AudioSource music;
 
     private void Awake() {
         if (_instance != null) {
@@ -17,8 +20,10 @@ public class Sys : MonoBehaviour {
             return;
         }
         _instance = this;
+        nodeTimeParser = GetComponent<NodeTimeParser>();
+        music = GetComponent<AudioSource>();
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start() {
         Init();
     }
@@ -39,17 +44,23 @@ public class Sys : MonoBehaviour {
                 eventNodes.Add(eventNode);
             }
         }
-        NodeTimeParser nodeTimeParser = GetComponent<NodeTimeParser>();
-        for (int i = eventNodes.Count - 1; i >= 0; i--) {
-            eventNodes[i].time = nodeTimeParser.GetTime(i);
-            if (i < eventNodes.Count - 1) {
-                eventNodes[i].velocity = Vector3.Distance(eventNodes[i].transform.position, eventNodes[i + 1].transform.position) / GetDuration(i, eventNodes);
-            }
+        int n = eventNodes.Count;
+        eventNodes[n - 1].InitStartTimeAndVelocity(nodeTimeParser.GetTime(n - 1), null);
+        for (int i = n - 2; i >= 0; i--) {
+            eventNodes[i].InitStartTimeAndVelocity(nodeTimeParser.GetTime(i), eventNodes[i + 1]);
         }
         return eventNodes;
     }
 
-    private void ResetPlayer(List<EventNode> eventNodes) {
+    public EventNode GetDestination(EventNode eventNode, List<EventNode> eventNodes) {
+        int idx = eventNodes.FindIndex(e => e == eventNode);
+        if (idx >= 0 && idx < eventNodes.Count - 1) {
+            return eventNodes[idx + 1];
+        }
+        return null;
+    }
+
+/*    private void ResetPlayer(List<EventNode> eventNodes) {
         if (eventNodes.Count > 0) {
             player.transform.position = eventNodes[0].transform.position;
         }
@@ -59,24 +70,13 @@ public class Sys : MonoBehaviour {
         sq.Restart();
         GetComponent<AudioSource>().Play();
     }
-
+*/
     public void Init() {
-        sq = DOTween.Sequence();
-        sq.SetAutoKill(false);
-        sq.Pause();
-
-        List<EventNode> eventNodes = GetEventNodes();
-        ResetPlayer(eventNodes);
-
-        for (int i = 0; i < eventNodes.Count - 1; i++) {
-            EventNode eventNode = eventNodes[i];
-            Tween tween = GetTween(player, eventNode.moveType, GetDuration(i, eventNodes), eventNodes[i + 1].transform.position, eventNode.jumpPower);
-            sq.Append(tween);
-        }
+        GetEventNodes();
     }
 
     public float GetDuration(int idx, List<EventNode> eventNodes) {
-        return eventNodes[idx + 1].time - eventNodes[idx].time;
+        return eventNodes[idx + 1].startTime - eventNodes[idx].startTime;
     }
 
 /*    public float GetTime(int idx) {
@@ -96,10 +96,10 @@ public class Sys : MonoBehaviour {
         }
         return res;
     }
-*/    private Tween GetTween(Transform transform, MoveType moveType, float duration, Vector3 destination, float jumpPower) {
+    private Tween GetTween(Transform transform, MoveType moveType, float duration, Vector3 destination, float jumpPower) {
         switch (moveType) {
             case MoveType.Jump:
-                return transform.DOJump(destination, jumpPower, 1, duration);
+                return transform.DOJump(destination, jumpPower, 1, duration).SetEase(jumpCurve);
             case MoveType.Straight:
                 return transform.DOMove(destination, duration).SetEase(Ease.Linear);
             default:
@@ -107,11 +107,34 @@ public class Sys : MonoBehaviour {
                 return null;
         }
     }
+*/    private Vector3 CalcPosition(float t) {
+        List<EventNode> eventNodes = GetEventNodes();
+        if (t < 0 || t > nodeTimeParser.GetTime(eventNodes.Count - 1)) {
+            Debug.LogError("计算位置时，时间非法");
+            return Vector3.zero;
+        }
+
+        for (int i = 0; i < eventNodes.Count - 1; i++) {
+            if (eventNodes[i].startTime <= t && eventNodes[i + 1].startTime > t) {
+                return eventNodes[i].GetPointAtTime(t - eventNodes[i].startTime, eventNodes[i + 1]);
+            }
+        }
+        Debug.LogError("计算位置时，没找到对应的Event Node");
+        return Vector3.zero;
+    }
+
+    private void PlayAtTime(float t) {
+        this.playEvent.Invoke(CalcPosition(t));
+    }
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.K)) {
-            Play();
+        if (Application.isPlaying) {
+            if (Input.GetKeyDown(KeyCode.K)) {
+                music.Play();
+                PlayAtTime(0f);
+            }
+            PlayAtTime(music.time);
         }
     }
 }
