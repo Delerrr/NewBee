@@ -127,14 +127,16 @@ public class Sys : MonoBehaviour {
         this.playEvent.Invoke(CalcPosition(t));
     }
 
+    double timePre = -1;
     // Update is called once per frame
-    void Update() {
+    void LateUpdate() {
         if (Application.isPlaying) {
             if (Input.GetKeyDown(KeyCode.K)) {
-                music.Play();
+                music.PlayScheduled(0f);
                 PlayAtTime(0f);
+                timePre = AudioSettings.dspTime;
             }
-            PlayAtTime(music.time);
+            PlayAtTime((float)(AudioSettings.dspTime - timePre));
         }
     }
 }
