@@ -116,6 +116,11 @@ public class Sys : MonoBehaviour {
 
         for (int i = 0; i < eventNodes.Count - 1; i++) {
             if (eventNodes[i].startTime <= t && eventNodes[i + 1].startTime > t) {
+                // TODO: 这里不是CalcPosition的功能，应该把它挪到其他地方
+                if (currentEventNode != eventNodes[i]) {
+                    currentEventNode = eventNodes[i];
+                    eventNodes[i].TriggerEffects();
+                }
                 return eventNodes[i].GetPointAtTime(t - eventNodes[i].startTime, eventNodes[i + 1]);
             }
         }
@@ -128,6 +133,7 @@ public class Sys : MonoBehaviour {
     }
 
     double timePre = -1;
+    private EventNode currentEventNode;
     // Update is called once per frame
     void LateUpdate() {
         if (Application.isPlaying) {

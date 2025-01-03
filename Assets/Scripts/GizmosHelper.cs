@@ -13,7 +13,6 @@ public class GizmosHelper : MonoBehaviour
     public Color eventNodeTimeTextColor;
     public Color eventNodeVelocityTextColor;
     [Header("Trace")]
-    public GameObject emptyGameObject;
     public Color traceColor;
     public int tracePointsCountPerEventNode = 30;
 

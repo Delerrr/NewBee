@@ -10,15 +10,15 @@ public class EventNode : MonoBehaviour
     [Header("Jump")]
     public float jumpPower = 1f;
 
-    private List<Vector3> pathPoints = new();
-
-    private bool isUpdatingPathPoints = false;
-    private Transform emptyGameObject;
-
     private void Start() {
-        emptyGameObject = transform.Find("Empty(Clone)");
-        if (emptyGameObject == null) {
-            emptyGameObject = Instantiate(GizmosHelper.instance.emptyGameObject, transform).transform;
+    }
+
+    public void TriggerEffects() {
+        foreach (Transform child in transform) {
+            EffectTrigger effectTrigger = child.GetComponent<EffectTrigger>();
+            if (effectTrigger != null) {
+                effectTrigger.Trigger();
+            }
         }
     }
 
