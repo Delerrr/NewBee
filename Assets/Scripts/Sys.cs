@@ -12,7 +12,7 @@ public class Sys : MonoBehaviour {
     [Header("Jump")]
     public float gravity = -9.8f;
     private NodeTimeParser nodeTimeParser;
-    private AudioSource music;
+    public AudioSource music;
 
     private void Awake() {
         if (_instance != null) {
@@ -21,7 +21,6 @@ public class Sys : MonoBehaviour {
         }
         _instance = this;
         nodeTimeParser = GetComponent<NodeTimeParser>();
-        music = GetComponent<AudioSource>();
     }
 
     void Start() {
