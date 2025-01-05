@@ -6,7 +6,7 @@ public class Sys : MonoBehaviour {
     public static Sys instance => _instance;
     private static Sys _instance;
     public enum MoveType { Jump, Straight };
-    public delegate void Play(Vector3 position);
+    public delegate void Play(Vector3 position, float time);
     public Play playEvent;
     public Transform player;
     [Header("Jump")]
@@ -128,7 +128,7 @@ public class Sys : MonoBehaviour {
     }
 
     private void PlayAtTime(float t) {
-        this.playEvent.Invoke(CalcPosition(t));
+        this.playEvent.Invoke(CalcPosition(t), t);
     }
 
     double timePre = -1;
