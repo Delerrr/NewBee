@@ -20,7 +20,6 @@ public class GeneralTrigger : EffectTrigger
     public override void End() {
         if (!hasAdvanceTime) {
             TryEndGraceFully();
-        } else {
         }
     }
 
@@ -35,7 +34,7 @@ public class GeneralTrigger : EffectTrigger
         }
 
         if (time - endTime >= 0) {
-            if (time - endTime < Time.deltaTime * 2) {
+            if (time - endTime < Time.deltaTime * 10) {
                 TryEndGraceFully();
                 endFlag = true;
             } else {
@@ -50,7 +49,7 @@ public class GeneralTrigger : EffectTrigger
     }
 
     private void TriggerWithAdvanceTime(float time) {
-        float triggerTime = endNode.startTime - endAdvanceTime;
+        float triggerTime = transform.parent.GetComponent<EventNode>().startTime - endAdvanceTime;
         if (startFlag) {
             // 重新开始了游戏
             if (time - triggerTime < 0) {
@@ -60,7 +59,7 @@ public class GeneralTrigger : EffectTrigger
         }
 
         if (time - triggerTime >= 0) {
-            if (time - triggerTime < Time.deltaTime * 2) {
+            if (time - triggerTime < Time.deltaTime * 10) {
                 obj.SetActive(true);
                 startFlag = true;
             } else {

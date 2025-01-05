@@ -9,13 +9,16 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2572783924011080441}
+  - component: {fileID: 2468381542174010955}
+  - component: {fileID: 485639159583499159}
+  - component: {fileID: 3246010134676190510}
   m_Layer: 0
   m_Name: AudioVisualCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2572783924011080441
 Transform:
   m_ObjectHideFlags: 0
@@ -33,6 +36,52 @@ Transform:
   - {fileID: 6436848893304801967}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2468381542174010955
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265967971953668590}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 03bc5af2e74602949b4a293e78b6a43d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &485639159583499159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265967971953668590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2b41a89f4959ba44b11480ec28e70d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3246010134676190510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 265967971953668590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e65db43e872281046bb93daa34cdfae7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3105637362383121037
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41,13 +90,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2572783924011080441}
     m_Modifications:
+    - target: {fileID: 1289142669503004311, guid: cece3aae31c9cef44b9296bcafe626e2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1456293014965344821, guid: cece3aae31c9cef44b9296bcafe626e2, type: 3}
       propertyPath: m_Name
       value: L
       objectReference: {fileID: 0}
     - target: {fileID: 7472415244622063443, guid: cece3aae31c9cef44b9296bcafe626e2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -192.1
+      value: -280.17
       objectReference: {fileID: 0}
     - target: {fileID: 7472415244622063443, guid: cece3aae31c9cef44b9296bcafe626e2, type: 3}
       propertyPath: m_LocalPosition.y
@@ -103,13 +156,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2572783924011080441}
     m_Modifications:
+    - target: {fileID: 1007609350748057933, guid: cece3aae31c9cef44b9296bcafe626e2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1456293014965344821, guid: cece3aae31c9cef44b9296bcafe626e2, type: 3}
       propertyPath: m_Name
       value: R
       objectReference: {fileID: 0}
     - target: {fileID: 7472415244622063443, guid: cece3aae31c9cef44b9296bcafe626e2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 192.1
+      value: 502.8
       objectReference: {fileID: 0}
     - target: {fileID: 7472415244622063443, guid: cece3aae31c9cef44b9296bcafe626e2, type: 3}
       propertyPath: m_LocalPosition.y
