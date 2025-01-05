@@ -4,6 +4,8 @@ using UnityEngine;
 [ExecuteAlways]
 public class EventNode : MonoBehaviour
 {
+    public delegate void TriggerNodeStart();
+    public TriggerNodeStart triggerNodeStart;
     public Sys.MoveType moveType = Sys.MoveType.Straight;
     public float startTime;
     public float velocity = 1f;
@@ -14,12 +16,7 @@ public class EventNode : MonoBehaviour
     }
 
     public void TriggerEffects() {
-        foreach (Transform child in transform) {
-            EffectTrigger effectTrigger = child.GetComponent<EffectTrigger>();
-            if (effectTrigger != null) {
-                effectTrigger.Trigger();
-            }
-        }
+        this.triggerNodeStart?.Invoke();  
     }
 
     public void InitStartTimeAndVelocity(float startTime, EventNode destination) {

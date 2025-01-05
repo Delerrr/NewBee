@@ -4854,9 +4854,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4692998033864990}
-  - component: {fileID: 114678305193455830}
   - component: {fileID: 7382598095495164810}
-  - component: {fileID: 3978045708837417135}
   m_Layer: 0
   m_Name: BoostTrail
   m_TagString: Untagged
@@ -4880,25 +4878,6 @@ Transform:
   - {fileID: 4538157378061642}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114678305193455830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959126674990218}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ea4308861e24ac4caa06d26e151d595, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageOverTime: 30
-  HitEffect: {fileID: 0}
-  HitOffset: 0.01
-  useLaserRotation: 0
-  MaxLength: 30
-  MainTextureLength: 0.1
-  NoiseTextureLength: 0.3
 --- !u!96 &7382598095495164810
 TrailRenderer:
   serializedVersion: 3
@@ -5024,16 +5003,3 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &3978045708837417135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959126674990218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b28b40965181ed42a9498f78bca27b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerType: 0
