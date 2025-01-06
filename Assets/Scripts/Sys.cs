@@ -6,6 +6,7 @@ using UnityEngine;
 public class Sys : MonoBehaviour {
     public static Sys instance => _instance;
     private static Sys _instance;
+    public GameObject cinemachieCamera;
     public enum MoveType { Jump, Straight };
     public delegate void Play(Vector3 position, float time);
     public Action restartEvent;

@@ -8,9 +8,11 @@ public class EventNode : MonoBehaviour
     public TriggerNodeStart triggerNodeStart;
     public Sys.MoveType moveType = Sys.MoveType.Straight;
     public float startTime;
+    [System.NonSerialized]
     public float velocity = 1f;
     [Header("Jump")]
-    public float jumpPower = 1f;
+    public bool customGravity = false;
+    public float gravity = -9.6f;
 
     private void Start() {
     }
@@ -61,9 +63,12 @@ public class EventNode : MonoBehaviour
         switch (this.moveType) {
             case Sys.MoveType.Jump:
                 res.x += velocity * t;
+                if (!customGravity) {
+                    gravity = Sys.instance.gravity;
+                }
                 // x = vt + 1/2 a t^2
-                float verticalVelocity = ((destination.y - res.y) - 0.5f * Sys.instance.gravity * duration * duration) / duration;
-                res.y += verticalVelocity * t + 0.5f * Sys.instance.gravity * t * t;
+                float verticalVelocity = ((destination.y - res.y) - 0.5f * gravity * duration * duration) / duration;
+                res.y += verticalVelocity * t + 0.5f * gravity * t * t;
                 break;
             case Sys.MoveType.Straight:
                 res = Vector3.Lerp(res, destination, t / duration);
