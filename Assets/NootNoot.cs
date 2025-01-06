@@ -14,6 +14,7 @@ public class NootNoot : MonoBehaviour
     private Animator animator;
     private float nootAnimDuration;
     private float pivotRatio = 0.6f;
+    // 如果不存起来，会导致TimedTrigger被反复自动创建，不知道为什么
     private List<TimedTrigger> timedTriggers = new();
     private void Start() {
         animator = GetComponent<Animator>();

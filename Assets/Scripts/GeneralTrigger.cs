@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GeneralTrigger : EffectTrigger
@@ -7,8 +5,10 @@ public class GeneralTrigger : EffectTrigger
     public GameObject obj;
     [Header("提前触发")]
     public bool hasAdvanceTime = false;
+    [Header("延时关闭")]
+    public bool hasDelayEndTime = false;
     public float startAdvanceTime;
-    public float endAdvanceTime;
+    public float endDelayTime;
     private TimedTrigger startTimedTrigger;
     private TimedTrigger endTimedTrigger;
     protected override void Start()
@@ -17,20 +17,17 @@ public class GeneralTrigger : EffectTrigger
         startTimedTrigger = new();
         endTimedTrigger = new();
         if (hasAdvanceTime) {
-            Sys.instance.playEvent += (_, time) => this.EndWithAdvanceTime(time);
             Sys.instance.playEvent += (_, time) => this.TriggerWithAdvanceTime(time);
         }
     }
     public override void End() {
-        if (!hasAdvanceTime) {
+        if (hasDelayEndTime) {
+            Invoke(nameof(TryEndGracefully), endDelayTime);
+        } else {
             TryEndGracefully();
         }
     }
 
-    private void EndWithAdvanceTime(float time) {
-        float endTime = endNode.startTime - endAdvanceTime;
-        endTimedTrigger.Trigger(time, endTime, TryEndGracefully);
-    }
     public override void Trigger() {
         if (!hasAdvanceTime) {
             obj.SetActive(true);
@@ -38,7 +35,7 @@ public class GeneralTrigger : EffectTrigger
     }
 
     private void TriggerWithAdvanceTime(float time) {
-        float triggerTime = transform.parent.GetComponent<EventNode>().startTime - endAdvanceTime;
+        float triggerTime = transform.parent.GetComponent<EventNode>().startTime - startAdvanceTime;
         startTimedTrigger.Trigger(time, triggerTime, () => obj.SetActive(true));
     }
     private void TryEndGracefully() {
