@@ -9,6 +9,7 @@ public class GizmosHelper : MonoBehaviour
     private static GizmosHelper _instance;
     [Header("Event Node")]
     public Color eventNodeColor;
+    public Color eventNodeBoundsColor;
     public float eventNodeRadius;
     public Color eventNodeTimeTextColor;
     public Color eventNodeVelocityTextColor;
@@ -62,6 +63,7 @@ public class GizmosHelper : MonoBehaviour
         List<EventNode> eventNodes = sys.GetEventNodes();
         for (int i = 0; i < eventNodes.Count; i++) {
             DrawNodePosition(eventNodes[i]);
+            DrawNodeBounds(eventNodes[i]);
             DrawEventNodeTime(eventNodes[i], i);
             DrawEventNodeVelocity(eventNodes[i]);
             if (i < eventNodes.Count - 1) {
@@ -69,6 +71,25 @@ public class GizmosHelper : MonoBehaviour
                 DrawNodeTrace(to, eventNodes[i], eventNodes);
             }
         }
+    }
+    private void DrawNodeBounds(EventNode eventNode) {
+        Gizmos.color = eventNodeBoundsColor;
+        BoxCollider2D boxCollider2D = Sys.instance.player.GetComponent<BoxCollider2D>();
+        Bounds bounds = boxCollider2D.bounds;
+        float z = eventNode.transform.position.z;
+        Vector3 min = bounds.min - bounds.center + eventNode.transform.position;
+        Vector3 max = bounds.max - bounds.center + eventNode.transform.position;
+        Vector3[] points = new Vector3[8] {
+            new Vector3(min.x, min.y, z),
+            new Vector3(min.x, max.y, z),
+            new Vector3(min.x, max.y, z),
+            new Vector3(max.x, max.y, z),
+            new Vector3(max.x, max.y, z),
+            new Vector3(max.x, min.y, z),
+            new Vector3(max.x, min.y, z),
+            new Vector3(min.x, min.y, z)
+        };
+        Gizmos.DrawLineList(points);
     }
     private void DrawEventNodeVelocity(EventNode eventNode) {
         GUIStyle style = new();
