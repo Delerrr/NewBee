@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class Sys : MonoBehaviour {
     private static Sys _instance;
     public enum MoveType { Jump, Straight };
     public delegate void Play(Vector3 position, float time);
+    public Action restartEvent;
     public Play playEvent;
     public Transform player;
     [Header("Jump")]
@@ -25,6 +27,7 @@ public class Sys : MonoBehaviour {
 
     void Start() {
         Init();
+        Restart();
     }
 
     public int GetIdx(EventNode target, List<EventNode> eventNodes) {
@@ -128,20 +131,28 @@ public class Sys : MonoBehaviour {
     }
 
     private void PlayAtTime(float t) {
-        this.playEvent.Invoke(CalcPosition(t), t);
+        this.playEvent?.Invoke(CalcPosition(t), t);
     }
 
+    private void Restart() {
+        if (!Application.isPlaying) {
+            return;
+        }
+        restartEvent?.Invoke();
+        music.PlayScheduled(0f);
+        PlayAtTime(0f);
+        timePre = AudioSettings.dspTime;
+    }
     double timePre = -1;
     private EventNode currentEventNode;
     // Update is called once per frame
     void LateUpdate() {
         if (Application.isPlaying) {
             if (Input.GetKeyDown(KeyCode.K)) {
-                music.PlayScheduled(0f);
-                PlayAtTime(0f);
-                timePre = AudioSettings.dspTime;
+                Restart();
+            } else {
+                PlayAtTime((float)(AudioSettings.dspTime - timePre));
             }
-            PlayAtTime((float)(AudioSettings.dspTime - timePre));
         }
     }
 }

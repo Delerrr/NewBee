@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GeneralTrigger : EffectTrigger
@@ -7,11 +9,13 @@ public class GeneralTrigger : EffectTrigger
     public bool hasAdvanceTime = false;
     public float startAdvanceTime;
     public float endAdvanceTime;
-    private bool startFlag = false;
-    private bool endFlag = false;
+    private TimedTrigger startTimedTrigger;
+    private TimedTrigger endTimedTrigger;
     protected override void Start()
     {
         base.Start();
+        startTimedTrigger = new();
+        endTimedTrigger = new();
         if (hasAdvanceTime) {
             Sys.instance.playEvent += (_, time) => this.EndWithAdvanceTime(time);
             Sys.instance.playEvent += (_, time) => this.TriggerWithAdvanceTime(time);
@@ -19,28 +23,13 @@ public class GeneralTrigger : EffectTrigger
     }
     public override void End() {
         if (!hasAdvanceTime) {
-            TryEndGraceFully();
+            TryEndGracefully();
         }
     }
 
     private void EndWithAdvanceTime(float time) {
         float endTime = endNode.startTime - endAdvanceTime;
-        if (endFlag) {
-            // 重新开始了游戏
-            if (time - endTime < 0) {
-                endFlag = false;
-            }
-            return;
-        }
-
-        if (time - endTime >= 0) {
-            if (time - endTime < Time.deltaTime * 10) {
-                TryEndGraceFully();
-                endFlag = true;
-            } else {
-                Debug.LogError("没有正常结束Trigger!!!");
-            }
-        }
+        endTimedTrigger.Trigger(time, endTime, TryEndGracefully);
     }
     public override void Trigger() {
         if (!hasAdvanceTime) {
@@ -50,24 +39,9 @@ public class GeneralTrigger : EffectTrigger
 
     private void TriggerWithAdvanceTime(float time) {
         float triggerTime = transform.parent.GetComponent<EventNode>().startTime - endAdvanceTime;
-        if (startFlag) {
-            // 重新开始了游戏
-            if (time - triggerTime < 0) {
-                startFlag = false;
-            }
-            return;
-        }
-
-        if (time - triggerTime >= 0) {
-            if (time - triggerTime < Time.deltaTime * 10) {
-                obj.SetActive(true);
-                startFlag = true;
-            } else {
-                Debug.LogError("没有正常开启Trigger!!!");
-            }
-        }
+        startTimedTrigger.Trigger(time, triggerTime, () => obj.SetActive(true));
     }
-    private void TryEndGraceFully() {
+    private void TryEndGracefully() {
         EndGracefully endGracefully = obj.GetComponent<EndGracefully>();
         if (endGracefully != null) {
             endGracefully.End();
