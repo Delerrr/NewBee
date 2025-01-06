@@ -28,9 +28,15 @@ public class GeneralTrigger : EffectTrigger
         }
     }
 
+    protected virtual void StartEffect() {
+        obj.SetActive(true);
+    }
+    protected virtual void EndEffect() {
+        obj.SetActive(false);
+    }
     public override void Trigger() {
         if (!hasAdvanceTime) {
-            obj.SetActive(true);
+            StartEffect();
         }
     }
 
@@ -39,11 +45,15 @@ public class GeneralTrigger : EffectTrigger
         startTimedTrigger.Trigger(time, triggerTime, () => obj.SetActive(true));
     }
     private void TryEndGracefully() {
+        if (obj == null) {
+            EndEffect();
+            return;
+        }
         EndGracefully endGracefully = obj.GetComponent<EndGracefully>();
         if (endGracefully != null) {
             endGracefully.End();
         } else {
-            obj.SetActive(false);
+            EndEffect();
         }
     }
 }
