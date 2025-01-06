@@ -23,10 +23,13 @@ public class Sys : MonoBehaviour {
         }
         _instance = this;
         nodeTimeParser = GetComponent<NodeTimeParser>();
+        /**
+         * 要在Awake里Init，因为有的组件(比如<see cref="NootNoot"/> 在Start里就要获取EventNodes了
+         */
+        Init();
     }
 
     void Start() {
-        Init();
         Restart();
     }
 

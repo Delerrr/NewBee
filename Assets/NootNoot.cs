@@ -57,6 +57,7 @@ public class NootNoot : MonoBehaviour
                 time,
                 animStartTime,
                 () => {
+                    Debug.Log("Noot Noot!!");
                     animator.SetFloat("Speed", duration / nootAnimDuration);
                     animator.Play("NootNoot");
                 }

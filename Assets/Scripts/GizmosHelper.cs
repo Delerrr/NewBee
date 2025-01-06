@@ -62,7 +62,7 @@ public class GizmosHelper : MonoBehaviour
         List<EventNode> eventNodes = sys.GetEventNodes();
         for (int i = 0; i < eventNodes.Count; i++) {
             DrawNodePosition(eventNodes[i]);
-            DrawEventNodeTime(eventNodes[i]);
+            DrawEventNodeTime(eventNodes[i], i);
             DrawEventNodeVelocity(eventNodes[i]);
             if (i < eventNodes.Count - 1) {
                 Vector3 to = eventNodes[i + 1].transform.position;
@@ -77,11 +77,11 @@ public class GizmosHelper : MonoBehaviour
             "v: " + eventNode.velocity, style);
     }
 
-    private void DrawEventNodeTime(EventNode eventNode) {
+    private void DrawEventNodeTime(EventNode eventNode, int idx) {
         GUIStyle style = new();
         style.normal.textColor = eventNodeTimeTextColor;
         Handles.Label(eventNode.transform.position + Vector3.up * (1f + eventNodeRadius) - Vector3.right * eventNodeRadius,
-            "t: " + eventNode.startTime, style);
+           "idx: " + idx + ", t: " + eventNode.startTime, style);
     }
 
     private void DrawNodePosition(EventNode eventNode) {
