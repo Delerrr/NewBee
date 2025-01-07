@@ -15,11 +15,10 @@ public class Sys : MonoBehaviour {
     [Header("Jump")]
     public float gravity = -9.8f;
     private NodeTimeParser nodeTimeParser;
-    public AudioSource music;
 
     private void Awake() {
         if (_instance != null) {
-            Debug.LogError("单例模式不能出现多个实例");
+            Debug.LogError(this.GetType() + ":单例模式不能出现多个实例");
             return;
         }
         _instance = this;
@@ -143,7 +142,7 @@ public class Sys : MonoBehaviour {
             return;
         }
         restartEvent?.Invoke();
-        music.PlayScheduled(0f);
+        AudioManager.instance.GetAudioSource().PlayScheduled(0f);
         PlayAtTime(0f);
         timePre = AudioSettings.dspTime;
     }

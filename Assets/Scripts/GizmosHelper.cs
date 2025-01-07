@@ -5,8 +5,6 @@ using UnityEngine;
 [ExecuteAlways]
 public class GizmosHelper : MonoBehaviour
 {
-    public static GizmosHelper instance => _instance;
-    private static GizmosHelper _instance;
     [Header("Event Node")]
     public Color eventNodeColor;
     public Color eventNodeBoundsColor;
@@ -28,11 +26,6 @@ public class GizmosHelper : MonoBehaviour
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake() {
-        if (_instance != null) {
-            Debug.LogError("单例模式不能出现多个实例");
-            return;
-        }
-        _instance = this;
     }
     void Start() {
     }

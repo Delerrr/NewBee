@@ -51,7 +51,7 @@ public class GeneralTrigger : EffectTrigger
         }
         EndGracefully endGracefully = obj.GetComponent<EndGracefully>();
         if (endGracefully != null) {
-            endGracefully.End();
+            endGracefully.End(obj);
         } else {
             EndEffect();
         }
