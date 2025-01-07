@@ -8,13 +8,10 @@ public class Sys : MonoBehaviour {
     private static Sys _instance;
     public GameObject cinemachieCamera;
     public enum MoveType { Jump, Straight };
-    public delegate void Play(Vector3 position, float time);
-    public Action restartEvent;
-    public Play playEvent;
+    public Action<float> playAtTimeAction;
+    public Action restartAction;
+    public Action initAction;
     public Transform player;
-    [Header("Jump")]
-    public float gravity = -9.8f;
-    private NodeTimeParser nodeTimeParser;
 
     private void Awake() {
         if (_instance != null) {
@@ -22,7 +19,6 @@ public class Sys : MonoBehaviour {
             return;
         }
         _instance = this;
-        nodeTimeParser = GetComponent<NodeTimeParser>();
         /**
          * 要在Awake里Init，因为有的组件(比如<see cref="NootNoot"/> 在Start里就要获取EventNodes了
          */
@@ -33,7 +29,7 @@ public class Sys : MonoBehaviour {
         Restart();
     }
 
-    public int GetIdx(EventNode target, List<EventNode> eventNodes) {
+/*    public int GetIdx(EventNode target, List<EventNode> eventNodes) {
         for (int i = 0; i < eventNodes.Count; i++) {
             if (eventNodes[i] == target) {
                 return i;
@@ -41,22 +37,7 @@ public class Sys : MonoBehaviour {
         }
         return -1;
     }
-    public List<EventNode> GetEventNodes() {
-        List<EventNode> eventNodes = new();
-        foreach (Transform child in transform) {
-            EventNode eventNode = child.GetComponent<EventNode>();
-            if (eventNode != null) {
-                eventNodes.Add(eventNode);
-            }
-        }
-        int n = eventNodes.Count;
-        eventNodes[n - 1].InitStartTimeAndVelocity(nodeTimeParser.GetTime(n - 1), null);
-        for (int i = n - 2; i >= 0; i--) {
-            eventNodes[i].InitStartTimeAndVelocity(nodeTimeParser.GetTime(i), eventNodes[i + 1]);
-        }
-        return eventNodes;
-    }
-
+*/    
     public EventNode GetDestination(EventNode eventNode, List<EventNode> eventNodes) {
         int idx = eventNodes.FindIndex(e => e == eventNode);
         if (idx >= 0 && idx < eventNodes.Count - 1) {
@@ -77,7 +58,7 @@ public class Sys : MonoBehaviour {
     }
 */
     public void Init() {
-        GetEventNodes();
+        initAction?.Invoke();
     }
 
     public float GetDuration(int idx, List<EventNode> eventNodes) {
@@ -112,49 +93,26 @@ public class Sys : MonoBehaviour {
                 return null;
         }
     }
-*/    private Vector3 CalcPosition(float t) {
-        List<EventNode> eventNodes = GetEventNodes();
-        if (t < 0 || t > nodeTimeParser.GetTime(eventNodes.Count - 1)) {
-            Debug.LogError("计算位置时，时间非法");
-            return Vector3.zero;
-        }
+*/    
 
-        for (int i = 0; i < eventNodes.Count - 1; i++) {
-            if (eventNodes[i].startTime <= t && eventNodes[i + 1].startTime > t) {
-                // TODO: 这里不是CalcPosition的功能，应该把它挪到其他地方
-                if (currentEventNode != eventNodes[i]) {
-                    currentEventNode = eventNodes[i];
-                    eventNodes[i].TriggerEffects();
-                }
-                return eventNodes[i].GetPointAtTime(t - eventNodes[i].startTime, eventNodes[i + 1]);
-            }
-        }
-        Debug.LogError("计算位置时，没找到对应的Event Node");
-        return Vector3.zero;
-    }
-
-    private void PlayAtTime(float t) {
-        this.playEvent?.Invoke(CalcPosition(t), t);
-    }
 
     private void Restart() {
         if (!Application.isPlaying) {
             return;
         }
-        restartEvent?.Invoke();
+        restartAction?.Invoke();
         AudioManager.instance.GetAudioSource().PlayScheduled(0f);
-        PlayAtTime(0f);
+        playAtTimeAction?.Invoke(0f);
         timePre = AudioSettings.dspTime;
     }
     double timePre = -1;
-    private EventNode currentEventNode;
     // Update is called once per frame
     void LateUpdate() {
         if (Application.isPlaying) {
             if (Input.GetKeyDown(KeyCode.K)) {
                 Restart();
             } else {
-                PlayAtTime((float)(AudioSettings.dspTime - timePre));
+                playAtTimeAction?.Invoke((float)(AudioSettings.dspTime - timePre));
             }
         }
     }

@@ -17,13 +17,13 @@ public class GizmosHelper : MonoBehaviour
 
     public delegate void UpdatePathPointsLoop();
     public UpdatePathPointsLoop updatePathPointsLoop;
+    private EventNodesParent GetEventNodesParent() {
+        return transform.GetComponent<EventNodesParent>();
+    }
     public List<EventNode> GetEventNodes() {
-        return GetSys().GetEventNodes();
+        return GetEventNodesParent().GetEventNodes();
     }
 
-    public Sys GetSys() {
-        return GetComponent<Sys>();
-    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake() {
     }
@@ -52,8 +52,7 @@ public class GizmosHelper : MonoBehaviour
     }
 
     private void DrawEventNodes() {
-        Sys sys = GetSys();
-        List<EventNode> eventNodes = sys.GetEventNodes();
+        List<EventNode> eventNodes = GetEventNodesParent().GetEventNodes();
         for (int i = 0; i < eventNodes.Count; i++) {
             DrawNodePosition(eventNodes[i]);
             DrawNodeBounds(eventNodes[i]);

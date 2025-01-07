@@ -6,7 +6,7 @@ public class TimedTrigger {
     private bool flag = false;
 
     public TimedTrigger() {
-        Sys.instance.restartEvent += () => flag = false;
+        Sys.instance.restartAction += () => flag = false;
     }
     public bool Trigger(float time, float triggerTime, Action successCallback) {
         if (triggerTime < 0) {

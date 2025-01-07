@@ -17,6 +17,9 @@ public class EventNode : MonoBehaviour
     private void Start() {
     }
 
+    public EventNodesParent GetParent() {
+        return transform.parent.GetComponent<EventNodesParent>();
+    }
     public void TriggerEffects() {
         this.triggerNodeStart?.Invoke();  
     }
@@ -64,7 +67,7 @@ public class EventNode : MonoBehaviour
             case Sys.MoveType.Jump:
                 res.x += velocity * t;
                 if (!customGravity) {
-                    gravity = Sys.instance.gravity;
+                    gravity = GetParent().gravity;
                 }
                 // x = vt + 1/2 a t^2
                 float verticalVelocity = ((destination.y - res.y) - 0.5f * gravity * duration * duration) / duration;

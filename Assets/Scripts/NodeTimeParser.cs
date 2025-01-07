@@ -4,8 +4,6 @@ using UnityEngine;
 public class NodeTimeParser : MonoBehaviour {
     enum NodeTag { Move = 1, Other = 2 }
 
-    public GameObject eventNodePrefeb;
-
     public TextAsset nodeResource;
 
     private List<float> times = new();

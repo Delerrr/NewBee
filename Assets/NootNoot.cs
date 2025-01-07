@@ -7,6 +7,7 @@ public class NootNoot : MonoBehaviour
     public float alpha = 0.886f;
     public float appearTimeAdvance = 0.5f;
     public float disappearDuration = 0.5f;
+    public EventNodesParent eventNodesParent;
     [Header("区间")]
     public List<EventNodeSection> sections;
     [Header("Noot动画时间点")]
@@ -29,12 +30,12 @@ public class NootNoot : MonoBehaviour
             TimedTrigger exitTimedTrigger = new TimedTrigger();
             timedTriggers.Add(enterTimedTrigger);
             timedTriggers.Add(exitTimedTrigger);
-            Sys.instance.playEvent += (_, time) => enterTimedTrigger.Trigger(
+            eventNodesParent.playEvent += (_, time) => enterTimedTrigger.Trigger(
                     time,
                     section[0].startTime - appearTimeAdvance,
                     Appear
             );
-            Sys.instance.playEvent += (_, time) => exitTimedTrigger.Trigger(
+            eventNodesParent.playEvent += (_, time) => exitTimedTrigger.Trigger(
                     time,
                     section[1].startTime,
                     Disappear
@@ -53,7 +54,7 @@ public class NootNoot : MonoBehaviour
             float animStartTime = eventNodes[i].startTime - duration * pivotRatio;
             TimedTrigger timedTrigger = new TimedTrigger();
             timedTriggers.Add(timedTrigger);
-            Sys.instance.playEvent += (_, time) => timedTrigger.Trigger(
+            eventNodesParent.playEvent += (_, time) => timedTrigger.Trigger(
                 time,
                 animStartTime,
                 () => {

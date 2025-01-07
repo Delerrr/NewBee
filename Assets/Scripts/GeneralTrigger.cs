@@ -17,7 +17,7 @@ public class GeneralTrigger : EffectTrigger
         startTimedTrigger = new();
         endTimedTrigger = new();
         if (hasAdvanceTime) {
-            Sys.instance.playEvent += (_, time) => this.TriggerWithAdvanceTime(time);
+            eventNodesParent.playEvent += (_, time) => this.TriggerWithAdvanceTime(time);
         }
     }
     public override void End() {

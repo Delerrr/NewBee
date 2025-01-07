@@ -11,7 +11,7 @@ public class ItemTrigger : EffectTrigger {
             Debug.LogError("初始化失败！Item不能为null");
             return;
         }
-        Sys.instance.restartEvent += () => item.SetActive(true);
+        Sys.instance.restartAction += () => item.SetActive(true);
     }
     public override void Trigger() {
         item.SetActive(false);
