@@ -17,7 +17,6 @@ public class CameraShakeEffectTrigger : GeneralTrigger
         if (settings == null) {
             settings = Sys.instance.cinemachieCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
         }
-        settings.AmplitudeGain = power;
         // TODO: noiseType
 /*        switch (this.noiseType) {
             case NoiseType.Shake:
@@ -27,6 +26,7 @@ public class CameraShakeEffectTrigger : GeneralTrigger
 */    }
 
     protected override void StartEffect() {
+        settings.AmplitudeGain = power;
         settings.enabled = true;
     }
 
