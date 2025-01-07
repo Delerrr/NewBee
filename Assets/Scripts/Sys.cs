@@ -10,7 +10,7 @@ public class Sys : MonoBehaviour {
     public enum MoveType { Jump, Straight };
     public Action<float> playAtTimeAction;
     public Action restartAction;
-    public Action initAction;
+    public static Action initAction;
     public Transform player;
 
     private void Awake() {

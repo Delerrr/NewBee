@@ -13,10 +13,10 @@ public class EventNodesParent : MonoBehaviour
     private EventNode currentEventNode;
     private void Awake() {
         nodeTimeParser = GetComponent<NodeTimeParser>();
+        Sys.initAction += () => GetEventNodes();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
-        Sys.instance.initAction += () => GetEventNodes();
         Sys.instance.playAtTimeAction += PlayAtTime;
     }
 
