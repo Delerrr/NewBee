@@ -8,7 +8,6 @@ public class EventNode : MonoBehaviour
     public TriggerNodeStart triggerNodeStart;
     public Sys.MoveType moveType = Sys.MoveType.Straight;
     public float startTime;
-    [System.NonSerialized]
     public float velocity = 1f;
     [Header("Jump")]
     public bool customGravity = false;

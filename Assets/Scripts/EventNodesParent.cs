@@ -31,7 +31,7 @@ public class EventNodesParent : MonoBehaviour
     private Vector3 CalcPosition(float t) {
         List<EventNode> eventNodes = GetEventNodes();
         if (t < 0 || t > nodeTimeParser.GetTime(eventNodes.Count - 1)) {
-            Debug.LogError("计算位置时，时间非法");
+            //Debug.LogError("计算位置时，时间非法");
             return Vector3.zero;
         }
 
