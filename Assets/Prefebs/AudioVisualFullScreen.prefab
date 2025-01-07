@@ -226,6 +226,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
+    - target: {fileID: 198440748086242412, guid: 6593aef56e01d4401b772bbd6d9ead18, type: 3}
+      propertyPath: moveWithTransform
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 199677529454721790, guid: 6593aef56e01d4401b772bbd6d9ead18, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
@@ -415,6 +419,10 @@ PrefabInstance:
     - target: {fileID: 4427058798524074, guid: 6593aef56e01d4401b772bbd6d9ead18, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198440748086242412, guid: 6593aef56e01d4401b772bbd6d9ead18, type: 3}
+      propertyPath: moveWithTransform
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 199677529454721790, guid: 6593aef56e01d4401b772bbd6d9ead18, type: 3}
       propertyPath: m_Materials.Array.size
@@ -718,6 +726,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198150896414722530, guid: 67a525e04ca8f42948b9443da0bc39ee, type: 3}
       propertyPath: randomSeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198150896414722530, guid: 67a525e04ca8f42948b9443da0bc39ee, type: 3}
+      propertyPath: moveWithTransform
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 198150896414722530, guid: 67a525e04ca8f42948b9443da0bc39ee, type: 3}
